@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}SuiteQL Learn{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <nav class="bg-white shadow px-4 py-3">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="text-indigo-600 text-xl font-bold">SuiteQL Learn</a>
+        {% if session.get('access_token') %}
+        <div class="text-sm">
+          <span class="mr-4 text-gray-600">Welcome, Learner</span>
+          <a href="/logout" class="text-red-500 hover:underline">Logout</a>
+        </div>
+        {% endif %}
+      </div>
+    </nav>
+    <main class="py-8 px-4">{% block content %} {% endblock %}</main>
+  </body>
+</html>

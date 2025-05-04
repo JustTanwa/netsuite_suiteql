@@ -1,6 +1,7 @@
 from flask import Flask, session, redirect, request, render_template, url_for
 import secrets
 from auth import get_authorization_url, get_token
+from database import get_lessons
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -8,14 +9,16 @@ app.secret_key = secrets.token_hex(32)
 @app.route("/")
 def home():
     if "access_token" in session:
-        return f"""
-            <h2>You're logged in via NetSuite!</h2>
-            <p>Access Token (partial): {session['access_token'][:10]}...</p>
-            <a href='/logout'>Logout</a>
-        """
+        lessons = get_lessons()
+        return redirect(render_template("dashboard.html", lessons=lessons))
     return render_template("home.html")
 
-@app.route("/login")
+@app.route("/dashboard")
+def dashboard():
+    lessons = get_lessons()
+    return render_template("dashboard.html", lessons=lessons)
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     state = secrets.token_urlsafe(32)
     session["oauth_state"] = state
@@ -48,6 +51,25 @@ def callback():
 def logout():
     session.clear()
     return redirect("/")
+
+@app.route("/lesson/<int:lesson_id>")
+def lesson(lesson_id):
+    lesson = get_lessons(lesson_id)
+    if len(lesson) == 0:
+        return render_template("404.html"), 404
+    lesson = lesson[0]
+    if not lesson["id"] == 1:
+        lesson.update({"show_editor": True})
+    return render_template("lesson.html", lesson=lesson)
+
+@app.route("/run-query/<int:lesson_id>", methods=["POST"])
+def run_query(lesson_id):
+    #TODO: Query Netsuite with SuiteQL
+    return {"success": False, "error": "Not implemented"}
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html") , 404
     
 if __name__ == "__main__":
     app.run(debug=True)
