@@ -55,7 +55,7 @@
     runButton.disabled = true;
     loading.classList.remove('hidden');
 
-    fetch(`/run-query/${lessonId}`, {
+    fetch(`/run-query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
