@@ -4,7 +4,7 @@
 <div class="max-w-4xl mx-auto px-4">
   <div class="bg-white shadow rounded-lg p-6">
     <h1 class="text-3xl font-bold text-indigo-700 mb-4">{{ lesson.lesson_name }}</h1>
-    <p class="mb-4 text-gray-700">{{ lesson.lesson_description }}</p>
+    <!-- <p class="mb-4 text-gray-700">{{ lesson.lesson_description }}</p> -->
 
     <main class="mb-4 text-gray-700">{{ lesson.lesson_content | safe }}</main>
     {% if lesson.show_editor %}
@@ -41,9 +41,13 @@
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.14/src-min-noconflict/mode-sql.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.14/src-min-noconflict/theme-monokai.js"></script>
 <script>
-  const editor = ace.edit('editor');
-  editor.setTheme('ace/theme/monokai');
-  editor.session.setMode('ace/mode/sql');
+  const editorExist = document.getElementById('editor')
+  let editor;
+  if (editorExist) {
+    editor = ace.edit('editor');
+    editor.setTheme('ace/theme/monokai');
+    editor.session.setMode('ace/mode/sql');
+  }
 
   function runQuery(lessonId) {
     const runButton = document.getElementById('run-query');
